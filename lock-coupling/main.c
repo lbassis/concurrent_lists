@@ -3,10 +3,10 @@
 #include <pthread.h>
 
 #include "set.h"
-#define N_THREAD 10   /* number of threads */
+#define N_THREAD 4   /* number of threads */
 #define N_INIT 50     /* number of initial values in the set */
-#define N_MAX 100     /* inserted integer are between 0 and N_MAX */ 
-#define N_OP 1000     /* number of operations per threads */
+#define N_MAX 50     /* inserted integer are between 0 and N_MAX */ 
+#define N_OP 10     /* number of operations per threads */
 #define F_INSERT .1     /* fraction of insert operation  */
 #define F_REMOVE .1     /* fraction of rmv operations    */
 #define F_SEARCH .8     /* fraction of search operations */
@@ -49,7 +49,8 @@ int main(int argc,char* argv[]){
   /* populate the set */
   fprintf(stderr,"populating ... \n");
   for(int i=0; i < N_INIT; i++){
-    int r = rand_r(&seed) % N_MAX;
+    //int r = rand_r(&seed) % N_MAX;
+    int r = i;
     set_add(&set,r);
   }
   fprintf(stderr,"creating ... \n");

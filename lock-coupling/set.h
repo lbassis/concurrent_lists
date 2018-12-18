@@ -5,11 +5,11 @@
 typedef struct node{
   int key;
   struct node* next;
+  pthread_mutex_t lock;
 } node_t;
 
 typedef struct intset{
   node_t* head;
-  pthread_mutex_t lock;
 } intset_t;
 
 
