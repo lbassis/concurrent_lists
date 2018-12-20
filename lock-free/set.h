@@ -6,6 +6,7 @@ typedef struct node{
   int key;
   struct node* next;
   pthread_mutex_t lock;
+  short int deleted;
 } node_t;
 
 typedef struct intset{
