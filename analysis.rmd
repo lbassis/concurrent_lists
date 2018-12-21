@@ -1,0 +1,28 @@
+---
+title: "concurrent lists"
+author: "Lucas Assis"
+date: "21/12/2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(dplyr, warn.conflicts = FALSE)
+library(ggplot2)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Concurrent Linked Lists
+
+This repport intends to show the results of the experiments with the different implementations of a concurrent linked list in C. Each execution was repeated 5 times in order to get the average time for each number of threads.
+
+```{r cars}
+summaryDf <- read.delim("data.txt", colClasses = character(), header = TRUE, sep = ",")
+summaryDf = summaryDf %>%
+  group_by(Algorithm, Threads) %>%
+  summarize(AvgTime=mean(Time)) %>%
+    ggplot(aes(x = Threads,y = AvgTime(s))) +
+      geom_point(aes(x = Threads,y = AvgTime, colour=Algorithm)) + scale_y_log10()
+
+summaryDf
+```
+
