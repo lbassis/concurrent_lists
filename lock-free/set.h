@@ -2,17 +2,18 @@
 #define SET_H
 
 #include <pthread.h>
+#include <stdatomic.h>
+
 typedef struct node{
   int key;
   struct node* next;
   pthread_mutex_t lock;
   short int deleted;
-} node_t;
+}node_t;
 
 typedef struct intset{
   node_t* head;
 } intset_t;
-
 
 node_t *delete_item(node_t *val);
 int is_deleted(node_t *val);

@@ -80,7 +80,7 @@ int main(int argc,char* argv[]){
 
 
   FILE *data = fopen("../data.txt", "a");
-  fprintf (data, "LazyLock, %d, %d, %f\n", execution, n_threads,
+  fprintf (data, "LockFree, %d, %d, %f\n", execution, n_threads,
          (double) (tv2.tv_usec - tv1.tv_usec) / 1000000 +
          (double) (tv2.tv_sec - tv1.tv_sec));
   fclose(data);

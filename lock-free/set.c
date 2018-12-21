@@ -4,6 +4,7 @@
 #include <limits.h>
 #include <assert.h>
 #include <limits.h>
+#include <stdatomic.h>
 
 #include "set.h"
 
@@ -55,8 +56,7 @@ int set_contain(intset_t* set, int val){
   }
   v = curr->key;
   
-  if (v == val) {
-    // validation step  
+  if (v == val) {  
     if (!curr->deleted && !pred->deleted && pred->next == curr) {
       return 1;
     }
@@ -68,6 +68,7 @@ int set_add(intset_t* set, int val){
   node_t* curr;
   node_t* pred;
   int v;
+  int cas = 1;
   pred = set->head;
   curr = pred->next;
   
@@ -84,11 +85,14 @@ int set_add(intset_t* set, int val){
     if (!curr->deleted && !pred->deleted && pred->next == curr) {
       node_t* new = malloc(sizeof(node_t));
       new->key=val;
-      pthread_mutex_init(&(new->lock),NULL);
-      pred->next=new;
+
+      do {
+	//pred->next=new;
       new->next=curr;
+      //atomic_compare_exchange_weak(pred->next, new->next, new);
       new->deleted = 0;
-    }
+      } while (cas != 1);
+      }
 
     else { // if it wasnt valid, the insertion wasnt valid
       v = -1;
@@ -117,19 +121,17 @@ int set_remove(intset_t* set, int val){
     curr = pred->next;
    }
 
-  pthread_mutex_lock(&(curr->lock));
-  pthread_mutex_lock(&(pred->lock));
   v = curr->key;
+
   
-  if (!curr->deleted && !pred->deleted && pred->next == curr) {
-    if (curr->key == val){
-      curr->deleted = 1;
-      pred->next = curr->next;
-    }
-    else {
-      v = -1;
-    }
+  if (curr->key == val){
+    curr->deleted = 1;
+    pred->next = curr->next;
   }
+  else {
+    v = -1;
+  }
+
   /* unlock the list */
   pthread_mutex_unlock(&(pred->lock));
   pthread_mutex_unlock(&(curr->lock));
